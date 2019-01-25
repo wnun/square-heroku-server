@@ -14,13 +14,13 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 let oauth2 = defaultClient.authentications['oauth2'];
-oauth2.accessToken = "sq0atp-xU2z9maDLxcWMHUJE0u4LQ";
+oauth2.accessToken = process.env.ACCESS_TOKEN;
 
 const transactionsApi = new TransactionsApi();
 const ordersApi = new OrdersApi();
 const locationsApi = new LocationsApi();
 
-app.post('/chargeForCookie', async (request, response) => {
+app.post('/chargeFive', async (request, response) => {
   const requestBody = request.body;
   const locations = await locationsApi.listLocations();
   const locationId = locations.locations[0].id;
@@ -29,15 +29,33 @@ app.post('/chargeForCookie', async (request, response) => {
     merchant_id: locations.locations[0].merchant_id,
     line_items: [
       {
-        name: "Coo",
+        name: "Five Dollar Plan",
         quantity: "1",
         base_price_money: {
-          amount: 150,
+          amount: 500,
           currency: "USD"
         }
       }
     ]
   });
+  app.post('/chargeTen', async (request, response) => {
+    const requestBody = request.body;
+    const locations = await locationsApi.listLocations();
+    const locationId = locations.locations[0].id;
+    const order = await ordersApi.createOrder(locationId, {
+      idempotency_key: crypto.randomBytes(12).toString('hex'),
+      merchant_id: locations.locations[0].merchant_id,
+      line_items: [
+        {
+          name: "Ten Dollar Plan",
+          quantity: "1",
+          base_price_money: {
+            amount: 1000,
+            currency: "USD"
+          }
+        }
+      ]
+    });
   try {
     const chargeBody = {
       "idempotency_key": crypto.randomBytes(12).toString('hex'),
@@ -97,9 +115,10 @@ app.post('/chargeForCookie', async (request, response) => {
           break;
     }
   }
+})
 });
 
 // listen for requests :)
 const listener = app.listen(process.env.PORT, function() {
   console.log('Your app is listening on port ' + listener.address().port);
-});
+})
