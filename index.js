@@ -20,7 +20,7 @@ const transactionsApi = new TransactionsApi();
 const ordersApi = new OrdersApi();
 const locationsApi = new LocationsApi();
 
-app.post('/chargeFive', async (request, response) => {
+app.post('/charge', async (request, response) => {
   const requestBody = request.body;
   const locations = await locationsApi.listLocations();
   const locationId = locations.locations[0].id;
@@ -29,34 +29,16 @@ app.post('/chargeFive', async (request, response) => {
     merchant_id: locations.locations[0].merchant_id,
     line_items: [
       {
-        name: "Five Dollar Plan",
+        name: "Ten Dollar Deal",
         quantity: "1",
         base_price_money: {
-          amount: requestBody.amount,
+          amount: 1000,
           currency: "USD"
         }
       }
     ]
-  });
-  app.post('/chargeTen', async (request, response) => {
-    const requestBody = request.body;
-    const locations = await locationsApi.listLocations();
-    const locationId = locations.locations[0].id;
-    const order = await ordersApi.createOrder(locationId, {
-      idempotency_key: crypto.randomBytes(12).toString('hex'),
-      merchant_id: locations.locations[0].merchant_id,
-      line_items: [
-        {
-          name: "Ten Dollar Plan",
-          quantity: "1",
-          base_price_money: {
-            amount: requestBody.amount,
-            currency: "USD"
-          }
-        }
-      ]
-    });
-  try {
+  })
+try {
     const chargeBody = {
       "idempotency_key": crypto.randomBytes(12).toString('hex'),
       "card_nonce": requestBody.nonce,
@@ -114,11 +96,10 @@ app.post('/chargeFive', async (request, response) => {
           })
           break;
     }
-  }
-})
+  };
 });
 
 // listen for requests :)
 const listener = app.listen(process.env.PORT, function() {
   console.log('Your app is listening on port ' + listener.address().port);
-})
+});
