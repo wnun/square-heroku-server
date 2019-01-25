@@ -32,7 +32,7 @@ app.post('/chargeFive', async (request, response) => {
         name: "Five Dollar Plan",
         quantity: "1",
         base_price_money: {
-          amount: 500,
+          amount: requestBody.amount,
           currency: "USD"
         }
       }
@@ -50,7 +50,7 @@ app.post('/chargeFive', async (request, response) => {
           name: "Ten Dollar Plan",
           quantity: "1",
           base_price_money: {
-            amount: 1000,
+            amount: requestBody.amount,
             currency: "USD"
           }
         }
