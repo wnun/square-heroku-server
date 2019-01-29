@@ -32,7 +32,7 @@ app.post('/chargeForCookie', async (request, response) => {
         name: "Cookie 🍪",
         quantity: "1",
         base_price_money: {
-          amount: 120,
+          amount: requestBody.amount_money,
           currency: "USD"
         }
       }
@@ -43,8 +43,8 @@ app.post('/chargeForCookie', async (request, response) => {
       "idempotency_key": crypto.randomBytes(12).toString('hex'),
       "card_nonce": requestBody.nonce,
       "amount_money": {
-        "amount": requestBody.amount_money,
-        "currency": "USD"
+         ...order.order.amount_money
+    
       },
       "order_id": order.order.id
     };
