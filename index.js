@@ -32,7 +32,7 @@ app.post('/chargeForCookie', async (request, response) => {
         name: "Cookie 🍪",
         quantity: "1",
         base_price_money: {
-          amount: requestBody.amountMoney,
+          amount: requestBody.amount_money,
           currency: "USD"
         }
       }
