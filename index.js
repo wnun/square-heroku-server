@@ -42,7 +42,10 @@ app.post('/chargeForCookie', async (request, response) => {
     const chargeBody = {
       "idempotency_key": crypto.randomBytes(12).toString('hex'),
       "card_nonce": requestBody.nonce,
-      "amount_money": {...requestBody.amount_money},
+      "amount_money": {
+        "amount": requestBody.amount_money,
+        "currency": "USD"
+      },
       "order_id": order.order.id
     };
     const transaction = await transactionsApi.charge(locationId, chargeBody);
