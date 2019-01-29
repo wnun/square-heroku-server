@@ -36,17 +36,15 @@ app.post('/chargeForCookie', async (request, response) => {
           currency: "USD"
         }
       }
-    ],
-    amount_money: requestBody.amount_money
-
+    ]
   });
   try {
     const chargeBody = {
       "idempotency_key": crypto.randomBytes(12).toString('hex'),
       "card_nonce": requestBody.nonce,
       "amount_money": {
-         ...order.order.amount_money
-    
+         amount: order.order.amount_money,
+         currency: "USD"
       },
       "order_id": order.order.id
     };
