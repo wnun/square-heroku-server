@@ -29,7 +29,7 @@ app.post('/chargeForCookie', async (request, response) => {
     merchant_id: locations.locations[0].merchant_id,
     line_items: [
       {
-        name: "Ten Dollar Deal",
+        name: "Cookie 🍪",
         quantity: "1",
         base_price_money: {
           amount: 1000,
@@ -37,8 +37,8 @@ app.post('/chargeForCookie', async (request, response) => {
         }
       }
     ]
-  })
-try {
+  });
+  try {
     const chargeBody = {
       "idempotency_key": crypto.randomBytes(12).toString('hex'),
       "card_nonce": requestBody.nonce,
@@ -96,7 +96,7 @@ try {
           })
           break;
     }
-  };
+  }
 });
 
 // listen for requests :)
