@@ -1,5 +1,5 @@
 {
-    "name": "Square Mobile Backend Server",
+    "name": "sq-snapping-turtles",
     "description": "An example mobile backend server for Square In-App Payments",
     "env": {
       "ACCESS_TOKEN": {
