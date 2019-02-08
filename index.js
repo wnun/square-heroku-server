@@ -20,7 +20,7 @@ const transactionsApi = new TransactionsApi();
 const ordersApi = new OrdersApi();
 const locationsApi = new LocationsApi();
 
-app.post('/chargeForCookie', async (request, response) => {
+app.post('/membershipcharge', async (request, response) => {
   const requestBody = request.body;
   const locations = await locationsApi.listLocations();
   const locationId = locations.locations[0].id;
@@ -29,16 +29,16 @@ app.post('/chargeForCookie', async (request, response) => {
     merchant_id: locations.locations[0].merchant_id,
     line_items: [
       {
-        name: "All Access Membership",
+        name: "Membership",
         quantity: "1",
         base_price_money: {
-          amount: 100,
+          amount: 20000,
           currency: "USD"
         }
       }
     ]
   });
-  try {
+  try{
     const chargeBody = {
       "idempotency_key": crypto.randomBytes(12).toString('hex'),
       "card_nonce": requestBody.nonce,
@@ -47,11 +47,11 @@ app.post('/chargeForCookie', async (request, response) => {
       },
       "order_id": order.order.id
     };
-    const transaction = await transactionsApi.charge(locationId, chargeBody);
+    const transaction = transactionsApi.charge(locationId, chargeBody);
     console.log(transaction.transaction);
 
     response.status(200).json(transaction.transaction);
-  } catch (e) {
+  }catch(error){
     delete e.response.req.headers;
     delete e.response.req._headers;
     console.log(
@@ -96,8 +96,8 @@ app.post('/chargeForCookie', async (request, response) => {
           })
           break;
     }
-  }
-});
+  }}
+);
 
 // listen for requests :)
 const listener = app.listen(process.env.PORT, function() {
