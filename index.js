@@ -30,7 +30,11 @@ app.post('/chargeForCookie', async (request, response) => {
     line_items: [
       {
         name: "All Access Membership",
-        quantity: "1"
+        quantity: "1",
+        base_price_money: {
+          amount: 1781,
+          currency: "USD"
+        }
       }
     ]
   });
