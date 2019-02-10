@@ -37,7 +37,7 @@ app.post('/chargeForCookie', async (request, response) => {
     };
 
 try{
- const transaction = await transactionsApi.charge(locationId, chargeBody);
+ const transaction = await transactionsApi.charge(locationId, body);
  console.log(transaction.transaction);
 
     response.status(200).json(transaction.transaction);
