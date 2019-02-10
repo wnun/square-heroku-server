@@ -29,10 +29,10 @@ app.post('/chargeForCookie', async (request, response) => {
     merchant_id: locations.locations[0].merchant_id,
     line_items: [
       {
-        name: "Dollar Token Bundle",
+        name: "Membership",
         quantity: "1",
         base_price_money: {
-          amount: 100,
+          amount: 2000,
           currency: "USD"
         }
       }
