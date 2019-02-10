@@ -24,30 +24,8 @@ app.post('/chargeForCookie', async (request, response) => {
   const requestBody = request.body;
   const locations = await locationsApi.listLocations();
   const locationId = locations.locations[0].id;
-  const order = await ordersApi.createOrder(locationId, {
-    idempotency_key: crypto.randomBytes(12).toString('hex'),
-    merchant_id: locations.locations[0].merchant_id,
-    line_items: [
-      {
-        name: "All Access Membership",
-        quantity: "1",
-        base_price_money: {
-          amount: requestBody.amount,
-          currency: "USD"
-        }
-      }
-    ]
-  });
-  try {
-    const chargeBody = {
-      "idempotency_key": crypto.randomBytes(12).toString('hex'),
-      "card_nonce": requestBody.nonce,
-      "amount_money": {
-         ...order.order.total_money
-      },
-      "order_id": order.order.id
-    };
-    const transaction = await transactionsApi.charge(locationId, chargeBody);
+  
+    const transaction = await transactionsApi.charge(locationId, requestBody);
     console.log(transaction.transaction);
 
     response.status(200).json(transaction.transaction);
