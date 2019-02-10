@@ -20,7 +20,7 @@ const transactionsApi = new TransactionsApi();
 const ordersApi = new OrdersApi();
 const locationsApi = new LocationsApi();
 
-app.post('/chargeForDollar', async (request, response) => {
+app.post('/chargeForCookie', async (request, response) => {
   const requestBody = request.body;
   const locations = await locationsApi.listLocations();
   const locationId = locations.locations[0].id;
