@@ -1,5 +1,3 @@
-/*jshint esversion: 9 */
-
 const express = require('express');
 const app = express();
 const SquareConnect = require('square-connect');
@@ -26,8 +24,22 @@ app.post('/chargeForCookie', async (request, response) => {
   const requestBody = request.body;
   const locations = await locationsApi.listLocations();
   const locationId = locations.locations[0].id;
-  const order = await ordersApi.createOrder(requestBody);
-  const body = {
+  const order = await ordersApi.createOrder(locationId, {
+    idempotency_key: crypto.randomBytes(12).toString('hex'),
+    merchant_id: locations.locations[0].merchant_id,
+    line_items: [
+      {
+        name: "All Access Membership",
+        quantity: "1",
+        base_price_money: {
+          amount: requestBody.amountMoney,
+          currency: "USD"
+        }
+      }
+    ]
+  });
+  try {
+    const chargeBody = {
       "idempotency_key": crypto.randomBytes(12).toString('hex'),
       "card_nonce": requestBody.nonce,
       "amount_money": {
@@ -35,16 +47,11 @@ app.post('/chargeForCookie', async (request, response) => {
       },
       "order_id": order.order.id
     };
-
-try{
- const transaction = await transactionsApi.charge(locationId, body);
- console.log(transaction.transaction);
+    const transaction = await transactionsApi.charge(locationId, chargeBody);
+    console.log(transaction.transaction);
 
     response.status(200).json(transaction.transaction);
-    
-  
-}catch(err){
-
+  } catch (e) {
     delete e.response.req.headers;
     delete e.response.req._headers;
     console.log(
