@@ -27,8 +27,7 @@ app.post('/chargeForCookie', async (request, response) => {
   const locations = await locationsApi.listLocations();
   const locationId = locations.locations[0].id;
   const order = await ordersApi.createOrder(requestBody);
-  try {
-    const chargeBody = {
+  const body = {
       "idempotency_key": crypto.randomBytes(12).toString('hex'),
       "card_nonce": requestBody.nonce,
       "amount_money": {
@@ -36,11 +35,16 @@ app.post('/chargeForCookie', async (request, response) => {
       },
       "order_id": order.order.id
     };
-    const transaction = await transactionsApi.charge(locationId, chargeBody);
-    console.log(transaction.transaction);
+
+try{
+ const transaction = await transactionsApi.charge(locationId, chargeBody);
+ console.log(transaction.transaction);
 
     response.status(200).json(transaction.transaction);
-  } catch (e) {
+    
+  
+}catch(err){
+
     delete e.response.req.headers;
     delete e.response.req._headers;
     console.log(
